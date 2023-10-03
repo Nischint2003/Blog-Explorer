@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Blog Explorer',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.light(useMaterial3: true)
           .copyWith(scaffoldBackgroundColor: Colors.white),
       home: const HomePage(),
