@@ -29,7 +29,7 @@ class _TabScreenState extends State<TabScreen> {
           Icon(Icons.favorite, size: 30, color: Colors.white),
         ],
         color: const Color.fromARGB(255, 4, 28, 167),
-        buttonBackgroundColor: Color.fromARGB(255, 80, 94, 188),
+        buttonBackgroundColor: const Color.fromARGB(255, 80, 94, 188),
         backgroundColor: Colors.white,
         onTap: (index) {
           setState(() {
