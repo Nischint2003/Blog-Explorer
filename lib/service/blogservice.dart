@@ -35,28 +35,43 @@ final blogProvider = FutureProvider<List<Blog>>((ref) async {
   const String adminSecret =
       '32qR4KmXOIpsGPQKMqEJHGJS27G5s7HdSKO3gdtQd2kv5e852SiYwWNfxkZOBuQ6';
 
-  final response = await http.get(Uri.parse(url), headers: {
-    'x-hasura-admin-secret': adminSecret,
-  });
+  try {
+    final response = await http.get(Uri.parse(url), headers: {
+      'x-hasura-admin-secret': adminSecret,
+    });
 
-  if (response.statusCode == 200) {
-    // Parse the response data and return a list of blogs
-    final List<dynamic> jsonData = json.decode(response.body)['blogs'];
-    List<Blog> blogs = jsonData.map((blog) => Blog.fromJson(blog)).toList();
+    if (response.statusCode == 200) {
+      // Parse the response data and return a list of blogs
+      final List<dynamic> jsonData = json.decode(response.body)['blogs'];
+      List<Blog> blogs = jsonData.map((blog) => Blog.fromJson(blog)).toList();
 
-    // Store blogs locally
-    final db = await _getDatabase();
-    for (var blog in blogs) {
-      await db.insert('blogs_explorer', {
-        'id': blog.id,
-        'title': blog.title,
-        'image': blog.imageUrl,
-      });
+      // Store blogs locally
+      final db = await _getDatabase();
+      for (var blog in blogs) {
+        await db.insert('blogs_explorer', {
+          'id': blog.id,
+          'title': blog.title,
+          'image': blog.imageUrl,
+        });
+      }
+
+      return blogs;
+    } else {
+      // Handle specific HTTP error codes
+      if (response.statusCode == 401) {
+        // Unauthorized
+        throw Exception('Unauthorized: Check your admin secret');
+      } else if (response.statusCode == 404) {
+        // Not Found
+        throw Exception('API endpoint not found');
+      } else {
+        // Throw a general error for other status codes
+        throw Exception(
+            'Failed to load blogs. Status code: ${response.statusCode}');
+      }
     }
-
-    return blogs;
-  } else {
-    // Throw an error if the request fails
-    throw Exception('Failed to load blogs');
+  } catch (e) {
+    // Handle other types of errors (e.g., network issues)
+    throw Exception('Failed to load blogs. Error: $e');
   }
 });
