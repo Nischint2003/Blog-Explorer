@@ -3,6 +3,8 @@ import 'package:blog_explorer/model/blog.dart';
 import 'package:blog_explorer/service/blogservice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:anim_search_bar/anim_search_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BlogPage extends ConsumerStatefulWidget {
   const BlogPage({super.key});
@@ -23,20 +25,32 @@ class _BlogPageState extends ConsumerState<BlogPage> {
     ref.read(localBlogProvider.future);
   }
 
+  TextEditingController textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Blog Explorer'),
+        title: Text(
+          'Blog Explorer',
+          style: GoogleFonts.aBeeZee(),
+        ),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: const Color.fromARGB(255, 21, 50, 210),
-              child: IconButton(
-                icon: const Icon(Icons.search, color: Colors.white),
-                onPressed: () {},
-              ),
+            padding: const EdgeInsets.only(right: 10, left: 10),
+            child: AnimSearchBar(
+              color: const Color.fromARGB(255, 80, 94, 188),
+              searchIconColor: Colors.white,
+              textFieldIconColor: Colors.white,
+              textFieldColor: const Color.fromARGB(255, 204, 209, 246),
+              width: 340,
+              textController: textController,
+              onSuffixTap: () {
+                setState(() {
+                  textController.clear();
+                });
+              },
+              onSubmitted: (String) {},
             ),
           ),
         ],
