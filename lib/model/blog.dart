@@ -12,4 +12,12 @@ class Blog {
       title: json['title'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'image_url': imageUrl,
+      // Add other properties as needed
+    };
+  }
 }
